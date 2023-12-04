@@ -1,0 +1,19 @@
+{
+  "TAG_NAME": "Tag-15342",
+  "FINGERPRINTS_SERVER": "http://ils.dsi.uminho.pt/ar-ware/S02/i2a/i2aSamples.php",
+  "CONFIG_SERVER": "http://ils.dsi.uminho.pt:8080/S11/boot",
+  "FINGERPRINT_SERVICE_SLEEP": 100,
+  "FINGERPRINT_SERVICE_COLLECT": 1000,
+  "MESSAGE_SERVICE_SLEEP": 20000,
+  "QUEUE_SIZE": 5,
+  "MAX_MESSAGE_ATTEMPTS": 3,
+  "MAX_MESSAGE_RETRIES": 3,
+  "MAX_WIFI_CONNECT_RETRIES": 3,
+  "CSI_MODE": true,
+  "WIFI_DETAILS": [
+    {
+      "PWD": "password123",
+      "SSID": "rede-2"
+    }
+  ]
+}

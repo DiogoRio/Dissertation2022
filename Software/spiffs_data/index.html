@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    html {
+      font-family: Arial;
+      display: inline-block;
+      margin: 0px auto;
+      text-align: center;
+    }
+
+    h1 {
+      color: #070812;
+      padding: 2vh;
+    }
+
+    .content {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-box {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 2px 12px 1px rgba(140, 140, 140, 0.5);
+      padding: 50px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+    }
+
+    .csi {
+      display: flex;
+      flex-direction: row;
+      padding: 20px 0;
+    }
+
+    .csi> :nth-child(2) {
+      margin-left: auto;
+    }
+
+    .wifi {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+
+    .wifi-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wifi-list>ul {
+      text-align: left
+    }
+
+    .wifi-fields {
+      padding-bottom: 30px
+    }
+  </style>
+  <title>WiFi Configuration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" type="text/css" />
+  <script>
+
+    const WIFI_DETAILS = [];
+
+    const addWifiToList = (ssidV, pwdV) => {
+
+      let ssid, pwd;
+
+      if (!ssidV || !pwdV) {
+
+        const ssidInput = document.getElementById("SSID");
+        const pwdInput = document.getElementById("PWD");
+
+        ssid = ssidInput.value;
+        pwd = pwdInput.value;
+      } else {
+        ssid = ssidV;
+        pwd = pwdV;
+      }
+
+      if (!ssid || ssid.length <= 0 || !pwd || pwd.length <= 0) return;
+
+
+
+
+      const ssidList = document.getElementById("SSID_LIST");
+      const pwdList = document.getElementById("PWD_LIST");
+
+      const ssidEntry = document.createElement('li');
+      const pwdEntry = document.createElement('li');
+
+      ssidEntry.appendChild(document.createTextNode(ssid));
+      pwdEntry.appendChild(document.createTextNode(pwd));
+
+      ssidList.appendChild(ssidEntry);
+      pwdList.appendChild(pwdEntry);
+
+      WIFI_DETAILS.push({ PWD: pwd, SSID: ssid });
+
+      ssidInput.value = null;
+      pwdInput.value = null;
+    }
+
+    const remove = () => {
+
+
+      const ssidInput = document.getElementById("REMOVE");
+
+      const ssid = ssidInput.value;
+
+      if (!ssid || ssid.length <= 0) return;
+
+
+
+      const ssidIndex = WIFI_DETAILS.findIndex((wifi) => wifi.SSID == ssid);
+
+      const ssidList = document.getElementById("SSID_LIST");
+      const pwdList = document.getElementById("PWD_LIST");
+
+      const ssidEntry = [...ssidList.childNodes.entries()][ssidIndex + 1][1];
+      const pwdEntry = [...pwdList.childNodes.entries()][ssidIndex + 1][1];
+
+      console.log(ssidEntry);
+
+      ssidList.removeChild(ssidEntry);
+      pwdList.removeChild(pwdEntry);
+
+      WIFI_DETAILS = WIFI_DETAILS.filter((wifi) => {
+        if (wifi.ssid) return wifi.ssid != ssid
+        else return wifi.SSID != ssid
+      });
+
+
+      ssidInput.value = null;
+    }
+
+
+    const submit = async () => {
+
+      let obj = { WIFI_DETAILS }
+      let elem = document.getElementById("TAG_NAME");
+      const TAG_NAME = elem.value;
+      if (TAG_NAME && TAG_NAME.length > 0) obj = { TAG_NAME, ...obj }
+
+      elem = document.getElementById("FINGERPRINTS_SERVER");
+      const FINGERPRINTS_SERVER = elem.value;
+      if (FINGERPRINTS_SERVER && FINGERPRINTS_SERVER.length > 0) obj = { FINGERPRINTS_SERVER, ...obj }
+
+
+      elem = document.getElementById("CONFIG_SERVER");
+      const CONFIG_SERVER = elem.value;
+      if (CONFIG_SERVER && CONFIG_SERVER.length > 0) obj = { CONFIG_SERVER, ...obj }
+
+
+      elem = document.getElementById("FINGERPRINT_SERVICE_SLEEP");
+      const FINGERPRINT_SERVICE_SLEEP = Number(elem.value);
+      if (Number(FINGERPRINT_SERVICE_SLEEP) != "NaN") obj = { FINGERPRINT_SERVICE_SLEEP, ...obj }
+
+
+      elem = document.getElementById("FINGERPRINT_SERVICE_COLLECT");
+      const FINGERPRINT_SERVICE_COLLECT = Number(elem.value);
+      if (Number(FINGERPRINT_SERVICE_COLLECT) != "NaN") obj = { FINGERPRINT_SERVICE_COLLECT, ...obj }
+
+
+      elem = document.getElementById("MESSAGE_SERVICE_SLEEP");
+      const MESSAGE_SERVICE_SLEEP = Number(elem.value);
+      if (Number(MESSAGE_SERVICE_SLEEP) != "NaN") obj = { MESSAGE_SERVICE_SLEEP, ...obj }
+
+
+      elem = document.getElementById("QUEUE_SIZE");
+      const QUEUE_SIZE = Number(elem.value);
+      if (Number(QUEUE_SIZE) != "NaN") obj = { QUEUE_SIZE, ...obj }
+
+
+      elem = document.getElementById("MAX_MESSAGE_ATTEMPTS");
+      const MAX_MESSAGE_ATTEMPTS = Number(elem.value);
+      if (Number(MAX_MESSAGE_ATTEMPTS) != "NaN") obj = { MAX_MESSAGE_ATTEMPTS, ...obj }
+
+
+      elem = document.getElementById("MAX_MESSAGE_RETRIES");
+      const MAX_MESSAGE_RETRIES = Number(elem.value);
+      if (Number(MAX_MESSAGE_RETRIES) != "NaN") obj = { MAX_MESSAGE_RETRIES, ...obj }
+
+
+      elem = document.getElementById("MAX_WIFI_CONNECT_RETRIES");
+      const MAX_WIFI_CONNECT_RETRIES = Number(elem.value);
+      if (Number(MAX_WIFI_CONNECT_RETRIES) != "NaN") obj = { MAX_WIFI_CONNECT_RETRIES, ...obj }
+
+      elem = document.getElementById("CSI_MODE");
+      const isCSI = elem.checked
+      obj = { CSI_MODE: isCSI, ...obj }
+
+
+
+      fetch("/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(obj),
+      }).then(r => {
+        if (r.ok) alert("Configuration submited with sucess");
+        else alert("Configuration failed");
+      })
+
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+      fetch("/configs")
+        .then((r) => r.json())
+        .then((j) => {
+          console.log(j)
+          let elem = document.getElementById("TAG_NAME");
+          elem.value = j.TAG_NAME ? j.TAG_NAME : j.tag_name ?? null;
+
+          elem = document.getElementById("FINGERPRINTS_SERVER");
+          elem.value = j.FINGERPRINTS_SERVER ? j.FINGERPRINTS_SERVER : j.fingerprints_server ?? null;
+
+          elem = document.getElementById("CONFIG_SERVER");
+          elem.value = j.CONFIG_SERVER ? j.CONFIG_SERVER : j.config_server ?? null;
+
+          elem = document.getElementById("FINGERPRINT_SERVICE_SLEEP");
+          elem.value = j.FINGERPRINT_SERVICE_SLEEP ? j.FINGERPRINT_SERVICE_SLEEP : j.fingerprint_service_sleep ?? null;
+
+          elem = document.getElementById("FINGERPRINT_SERVICE_COLLECT");
+          elem.value = j.FINGERPRINT_SERVICE_COLLECT ? j.FINGERPRINT_SERVICE_COLLECT : j.fingerprint_service_collect ?? null;
+
+          elem = document.getElementById("MESSAGE_SERVICE_SLEEP");
+          elem.value = j.MESSAGE_SERVICE_SLEEP ? j.MESSAGE_SERVICE_SLEEP : j.message_service_sleep ?? null;
+
+          elem = document.getElementById("QUEUE_SIZE");
+          elem.value = j.QUEUE_SIZE ? j.QUEUE_SIZE : j.queue_size ?? null;
+
+          elem = document.getElementById("MAX_MESSAGE_ATTEMPTS");
+          elem.value = j.MAX_MESSAGE_ATTEMPTS ? j.MAX_MESSAGE_ATTEMPTS : j.max_message_attempts ?? null;
+
+          elem = document.getElementById("MAX_MESSAGE_RETRIES");
+          elem.value = j.MAX_MESSAGE_RETRIES ? j.MAX_MESSAGE_RETRIES : j.max_message_retries ?? null;
+
+          elem = document.getElementById("MAX_WIFI_CONNECT_RETRIES");
+          elem.value = j.MAX_WIFI_CONNECT_RETRIES ? j.MAX_WIFI_CONNECT_RETRIES : j.max_wifi_connect_retries ?? null;
+
+
+          const csi_mode = j.CSI_MODE ? j.CSI_MODE : j.csi_mode ?? null;
+
+          elem = document.getElementById("CSI_MODE");
+          elem.checked = csi_mode;
+
+
+
+
+
+          if (j.WIFI_DETAILS != undefined)
+            j.WIFI_DETAILS.forEach(e => {
+              addWifiToList(e.SSID, e.PWD);
+            });
+          else if (j.wifi_details != undefined)
+            j.wifi_details.forEach(e => {
+              addWifiToList(e.ssid, e.pwd);
+            });
+        });
+
+
+      document.getElementById('form').addEventListener('submit', function (e) {
+        e.preventDefault(); //to prevent form submission
+        submit();
+      });
+
+    });
+
+  </script>
+</head>
+
+<body>
+  <h2>Settings</h2>
+  <form id="form" class="content">
+    <div class="card-box">
+      <div class="card">
+        <label for="TAG_NAME">TAG_NAME:</label>
+        <input type="text" id="TAG_NAME" name="TAG_NAME" required /><br /><br />
+        <label for="FINGERPRINTS_SERVER">FINGERPRINTS_SERVER:</label>
+        <input type="text" id="FINGERPRINTS_SERVER" name="FINGERPRINTS_SERVER" required /><br /><br />
+        <label for="CONFIG_SERVER">CONFIG_SERVER:</label>
+        <input type="text" id="CONFIG_SERVER" name="CONFIG_SERVER" required /><br /><br />
+        <label for="FINGERPRINT_SERVICE_SLEEP">FINGERPRINT_SERVICE_SLEEP:</label>
+        <input type="number" id="FINGERPRINT_SERVICE_SLEEP" name="FINGERPRINT_SERVICE_SLEEP" required /><br /><br />
+        <label for="FINGERPRINT_SERVICE_COLLECT">FINGERPRINT_SERVICE_COLLECT:</label>
+        <input type="number" id="FINGERPRINT_SERVICE_COLLECT" name="FINGERPRINT_SERVICE_COLLECT" required /><br /><br />
+        <label for="MESSAGE_SERssidVICE_SLEEP">MESSAGE_SERVICE_SLEEP:</label>
+        <input type="number" id="MESSAGE_SERVICE_SLEEP" name="MESSAGE_SERVICE_SLEEP" required /><br /><br />
+        <label for="QUEUE_SIZE">QUEUE_SIZE:</label>
+        <input type="number" id="QUEUE_SIZE" name="QUEUE_SIZE" required /><br /><br />
+        <label for="MAX_MESSAGE_ATTEMPTS">MAX_MESSAGE_ATTEMPTS:</label>
+        <input type="number" id="MAX_MESSAGE_ATTEMPTS" name="MAX_MESSAGE_ATTEMPTS" required /><br /><br />
+        <label for="MAX_MESSAGE_RETRIES">MAX_MESSAGE_RETRIES:</label>
+        <input type="number" id="MAX_MESSAGE_RETRIES" name="MAX_MESSAGE_RETRIES" required /><br /><br />
+        <label for="MAX_WIFI_CONNECT_RETRIES">MAX_WIFI_CONNECT_RETRIES:</label>
+        <input type="number" id="MAX_WIFI_CONNECT_RETRIES" name="MAX_WIFI_CONNECT_RETRIES" required /><br /><br />
+        <div class="csi">
+          <label>CSI_MODE</label>
+          <input type="checkbox" id="CSI_MODE" name="YES">
+          <label for="YES">YES</label><br>
+        </div>
+        <div class="wifi">
+          <div class="wifi-list">
+            SSID
+            <ul id="SSID_LIST">
+            </ul>
+          </div>
+          <div class="wifi-list">
+            PWD
+            <ul id="PWD_LIST">
+            </ul>
+          </div>
+        </div>
+        <div class="wifi-fields">
+          <label for="SSID">SSID:</label>
+          <input type="text" id="SSID" name="SSID" />
+          <label for="PWD">PWD:</label>
+          <input type="text" id="PWD" name="PWD" />
+          <button type="button" onclick="addWifiToList()">Add</button>
+        </div>
+        <div class="wifi-fields">
+          <label for="REMOVE">SSID:</label>
+          <input type="text" id="REMOVE" name="REMOVE" />
+          <button type="button" onclick="remove()">Remove</button>
+        </div>
+      </div>
+      <button type="submit">Submit & Reboot</button>
+    </div>
+  </form>
+</body>
+
+</html>
